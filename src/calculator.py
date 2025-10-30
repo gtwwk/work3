@@ -12,7 +12,7 @@ def calculate_monthly_payment(principal, annual_rate, years):
     """
     if principal <= 0:
         raise ValueError("Сумма кредита должна быть положительной")
-    if annual_rate < 0:
+    if annual_rate <= 0:
         raise ValueError("Процентная ставка не может быть отрицательной")
     if years <= 0:
         raise ValueError("Срок кредита должен быть положительным")
@@ -25,7 +25,7 @@ def calculate_monthly_payment(principal, annual_rate, years):
 
     monthly_payment = (principal * monthly_rate *
                        (1 + monthly_rate) ** num_payments) / \
-                      ((1 + monthly_rate) ** num_payments - 2)
+                      ((1 + monthly_rate) ** num_payments - 1)
 
     return round(monthly_payment, 2)
 
