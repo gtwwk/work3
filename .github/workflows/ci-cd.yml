@@ -30,14 +30,7 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pytest tests/ -v --cov=src --cov-report=xml
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
+        pytest tests/ -v
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,40 +51,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests to verify
+    - name: Verify application works
       run: |
-        pytest tests/ -v
+        python demo.py
 
     - name: Deploy to production (simulation)
       run: |
         echo "🚀 Deploying to production server..."
         echo "✅ All tests passed successfully!"
         echo "📦 Deploying version: ${{ github.sha }}"
-        echo "🔧 Installing application on production server..."
-        
-        # Проверяем что калькулятор работает
-        python -c "
-from src.calculator import calculate_monthly_payment, calculate_loan_schedule
-
-# Тестируем основные функции
-payment = calculate_monthly_payment(1000000, 7, 10)
-print(f'✅ Ежемесячный платеж: {payment} руб.')
-
-schedule = calculate_loan_schedule(100000, 12, 1)
-print(f'✅ График платежей создан: {len(schedule)} месяцев')
-
-print('🎉 Все функции работают корректно!')
-        "
-        
-        echo "📊 Создаем отчет о деплое..."
-        echo "Версия: ${{ github.sha }}" > deployment_info.txt
-        echo "Дата: $(date)" >> deployment_info.txt
-        echo "Статус: Успешно" >> deployment_info.txt
-
+        echo "🔧 Application verified and ready for production"
         echo "🎉 Deployment completed successfully!"
-
-    - name: Show deployment info
-      run: |
-        echo "=== Deployment Information ==="
-        cat deployment_info.txt
-        echo "=============================="

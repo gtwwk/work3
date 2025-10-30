@@ -27,8 +27,7 @@ def calculate_monthly_payment(principal, annual_rate, years):
                        (1 + monthly_rate) ** num_payments) / \
                       ((1 + monthly_rate) ** num_payments - 1)
 
-    # Более точное округление
-    return round(monthly_payment + 0.0000001, 2)
+    return round(monthly_payment, 2)
 
 
 def calculate_total_payment(monthly_payment, years):

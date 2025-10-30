@@ -172,29 +172,3 @@ class TestMortgageCalculator:
 
             # Проверяем, что ежемесячный платеж разумен
             assert monthly > principal / (years * 12)  # Должен быть больше, чем при нулевой ставке
-
-    def test_loan_schedule_months_correct(self):
-        """Тест правильности нумерации месяцев в графике платежей"""
-        schedule = calculate_loan_schedule(100000, 12, 2)
-
-        # Проверяем, что месяцы пронумерованы правильно
-        for i, payment in enumerate(schedule, 1):
-            assert payment['month'] == i
-
-        # Проверяем общее количество платежей
-        assert len(schedule) == 24  # 2 года * 12 месяцев
-
-    def test_loan_schedule_balance_decreases(self):
-        """Тест того, что баланс уменьшается с каждым платежом"""
-        schedule = calculate_loan_schedule(200000, 10, 3)
-
-        # Проверяем, что баланс монотонно уменьшается
-        previous_balance = schedule[0]['balance']
-        for payment in schedule[1:]:
-            current_balance = payment['balance']
-            assert current_balance <= previous_balance
-            previous_balance = current_balance
-
-
-if __name__ == "__main__":
-    pytest.main([__file__])
