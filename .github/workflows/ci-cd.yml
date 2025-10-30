@@ -2,9 +2,9 @@ name: CI/CD Pipeline for Mortgage Calculator
 
 on:
   push:
-    branches: [ master ]  # Изменили на master
+    branches: [ master ]
   pull_request:
-    branches: [ master ]  # Изменили на master
+    branches: [ master ]
 
 jobs:
   test:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]  # Исправленные версии Python
 
     steps:
     - name: Checkout code
@@ -42,7 +42,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/master'  # Изменили на master
+    if: github.ref == 'refs/heads/master'
 
     steps:
     - name: Checkout code
@@ -58,25 +58,40 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Run tests to verify
+      run: |
+        pytest tests/ -v
+
     - name: Deploy to production (simulation)
       run: |
         echo "🚀 Deploying to production server..."
-        echo "✅ Tests passed successfully!"
+        echo "✅ All tests passed successfully!"
         echo "📦 Deploying version: ${{ github.sha }}"
         echo "🔧 Installing application on production server..."
         
-        # Симуляция деплоя
+        # Проверяем что калькулятор работает
         python -c "
-        from src.calculator import calculate_monthly_payment
-        result = calculate_monthly_payment(1000000, 7, 10)
-        print(f'✅ Калькулятор работает! Ежемесячный платеж: {result} руб.')
+from src.calculator import calculate_monthly_payment, calculate_loan_schedule
+
+# Тестируем основные функции
+payment = calculate_monthly_payment(1000000, 7, 10)
+print(f'✅ Ежемесячный платеж: {payment} руб.')
+
+schedule = calculate_loan_schedule(100000, 12, 1)
+print(f'✅ График платежей создан: {len(schedule)} месяцев')
+
+print('🎉 Все функции работают корректно!')
         "
         
+        echo "📊 Создаем отчет о деплое..."
+        echo "Версия: ${{ github.sha }}" > deployment_info.txt
+        echo "Дата: $(date)" >> deployment_info.txt
+        echo "Статус: Успешно" >> deployment_info.txt
+
         echo "🎉 Deployment completed successfully!"
 
-    - name: Send deployment notification
+    - name: Show deployment info
       run: |
-        echo "📢 Deployment to production completed!"
-        echo "Commit: ${{ github.sha }}"
-        echo "By: ${{ github.actor }}"
-        echo "Message: ${{ github.event.head_commit.message }}"
+        echo "=== Deployment Information ==="
+        cat deployment_info.txt
+        echo "=============================="
