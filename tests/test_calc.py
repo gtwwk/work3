@@ -93,7 +93,7 @@ class TestMortgageCalculator:
         schedule = calculate_loan_schedule(100000, 12, 1)
 
         # Проверяем общее количество платежей
-        assert len(schedule) == 10
+        assert len(schedule) == 12
 
         # Проверяем структуру каждого платежа
         for payment in schedule:
