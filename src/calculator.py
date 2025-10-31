@@ -1,15 +1,5 @@
 def calculate_monthly_payment(principal, annual_rate, years):
-    """
-    Расчет ежемесячного платежа по ипотеке
 
-    Args:
-        principal (float): Сумма кредита
-        annual_rate (float): Годовая процентная ставка (в процентах)
-        years (int): Срок кредита в годах
-
-    Returns:
-        float: Ежемесячный платеж
-    """
     if principal <= 0:
         raise ValueError("Сумма кредита должна быть положительной")
     if annual_rate < 0:
@@ -31,45 +21,17 @@ def calculate_monthly_payment(principal, annual_rate, years):
 
 
 def calculate_total_payment(monthly_payment, years):
-    """
-    Расчет общей суммы выплат по кредиту
 
-    Args:
-        monthly_payment (float): Ежемесячный платеж
-        years (int): Срок кредита в годах
-
-    Returns:
-        float: Общая сумма выплат
-    """
     return round(monthly_payment * years * 12, 2)
 
 
 def calculate_total_interest(total_payment, principal):
-    """
-    Расчет общей суммы переплаты по кредиту
 
-    Args:
-        total_payment (float): Общая сумма выплат
-        principal (float): Сумма кредита
-
-    Returns:
-        float: Сумма переплаты
-    """
     return round(total_payment - principal, 2)
 
 
 def calculate_loan_schedule(principal, annual_rate, years):
-    """
-    Расчет графика платежей по ипотеке
 
-    Args:
-        principal (float): Сумма кредита
-        annual_rate (float): Годовая процентная ставка (в процентах)
-        years (int): Срок кредита в годах
-
-    Returns:
-        list: График платежей
-    """
     monthly_payment = calculate_monthly_payment(principal, annual_rate, years)
     monthly_rate = annual_rate / 100 / 12
     balance = principal
